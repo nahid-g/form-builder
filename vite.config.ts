@@ -10,4 +10,13 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: `http://team.dev.helpabode.com:54292/api/wempro/react-dev/coding-test/m.a.nahid008@gmail.com`,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 }));

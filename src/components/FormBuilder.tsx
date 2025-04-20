@@ -432,7 +432,7 @@ const FormBuilder = () => {
   const handleSaveForm = async () => {
     try {
       const resp = await fetch(
-        `http://team.dev.helpabode.com:54292/api/wempro/react-dev/coding-test/m.a.nahid008@gmail.com`,
+        `/api`,
         {
           method: "POST",
           headers: {
@@ -474,7 +474,7 @@ const FormBuilder = () => {
   const fetchSavedForm = async () => {
     try {
       const resp = await fetch(
-        `http://team.dev.helpabode.com:54292/api/wempro/react-dev/coding-test/m.a.nahid008@gmail.com`,
+        `/api`,
         {
           method: "GET",
           headers: {
