@@ -2,6 +2,8 @@ import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { Field } from "./FormBuilder";
 import { Copy } from "lucide-react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 type FieldComponentProps = {
   field: Field;
   onSelect: (field: Field) => void;
@@ -17,13 +19,26 @@ const FieldComponent = ({
   onDuplicate,
   isSelected,
 }: FieldComponentProps) => {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
     id: field.id,
     data: {
       type: "field",
       field,
     },
   });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
 
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -52,6 +67,7 @@ const FieldComponent = ({
   return (
     <div
       ref={setNodeRef}
+      style={style}
       {...listeners}
       {...attributes}
       className={`relative bg-gray-100 border-2 ${

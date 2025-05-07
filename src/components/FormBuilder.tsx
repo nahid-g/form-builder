@@ -140,7 +140,7 @@ const FormBuilder = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-
+    // console.log("active", active);
     if (active.data?.current?.type === "field-type") {
       setDragOrigin("palette");
       const type = active.data.current.fieldType as FieldType;
@@ -153,7 +153,6 @@ const FormBuilder = () => {
       const fieldsetIdx = fieldsets.findIndex((fs) =>
         fs.fields.some((f) => f.id === fieldId)
       );
-
       if (fieldsetIdx !== -1) {
         const fieldIdx = fieldsets[fieldsetIdx].fields.findIndex(
           (f) => f.id === fieldId
@@ -167,6 +166,7 @@ const FormBuilder = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    console.log("dragEnd", over);
     if (!over) {
       setActiveField(null);
       setDragOrigin(null);
@@ -203,7 +203,7 @@ const FormBuilder = () => {
         }
       }
     } else if (dragOrigin === "canvas" && activeField) {
-      console.log("dragOrigin canvas", dragOrigin);
+      // console.log("dragOrigin canvas", dragOrigin, activeField);
       const sourceFieldsetIdx = fieldsets.findIndex((fs) =>
         fs.fields.some((f) => f.id === activeField.id)
       );
@@ -221,8 +221,8 @@ const FormBuilder = () => {
       console.log("sourceFieldIdx", sourceFieldIdx);
       const updatedFieldsets = [...fieldsets];
 
-      if (over.id.toString().startsWith("field:")) {
-        console.log("over.id.toString().startsWith('field:')", over.id.toString().startsWith("field:"));
+      if (over.data.current?.type === "field") {
+        console.log(over.data.current);
         const targetFieldId = over.id.toString().replace("field:", "");
         const targetFieldsetIdx = updatedFieldsets.findIndex((fs) =>
           fs.fields.some((f) => f.id === targetFieldId)
@@ -432,7 +432,7 @@ const FormBuilder = () => {
   const handleSaveForm = async () => {
     try {
       const resp = await fetch(
-        `/api`,
+        `http://team.dev.helpabode.com:54292/api/wempro/react-dev/coding-test/m.a.nahid008@gmail.com`,
         {
           method: "POST",
           headers: {
@@ -474,7 +474,7 @@ const FormBuilder = () => {
   const fetchSavedForm = async () => {
     try {
       const resp = await fetch(
-        `/api`,
+        `http://team.dev.helpabode.com:54292/api/wempro/react-dev/coding-test/m.a.nahid008@gmail.com`,
         {
           method: "GET",
           headers: {

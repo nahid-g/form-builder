@@ -1,9 +1,13 @@
-
 import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { Field, Fieldset } from "./FormBuilder";
 import FieldComponent from "./FieldComponent";
-
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 type FieldsetComponentProps = {
   fieldset: Fieldset;
   onFieldSelect: (field: Field) => void;
@@ -25,9 +29,28 @@ const FieldsetComponent = ({
   isSelected,
   selectedFieldId,
 }: FieldsetComponentProps) => {
-  const { setNodeRef, isOver } = useDroppable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: fieldset.id,
+    data: {
+      type: "fieldset",
+    },
+  });
+
+  const { setNodeRef: DraggableComponent, isOver } = useDroppable({
     id: `fieldset:${fieldset.id}`,
   });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const handleFieldsetClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -42,6 +65,9 @@ const FieldsetComponent = ({
   return (
     <fieldset
       ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       className={`border-2 rounded-lg p-4 ${
         isSelected
           ? "border-blue-500 bg-blue-50"
@@ -55,22 +81,27 @@ const FieldsetComponent = ({
         {fieldset.name}
       </legend>
 
-      <div className="space-y-3">
+      <div ref={DraggableComponent} className="space-y-3">
         {fieldset.fields?.length === 0 ? (
           <div className="bg-gray-50 border border-dashed border-gray-300 rounded p-4 text-gray-500 text-center">
             Drop fields here
           </div>
         ) : (
-          fieldset.fields?.map((field) => (
-            <FieldComponent
-              key={field.id}
-              field={field}
-              onSelect={onFieldSelect}
-              onDelete={onFieldDelete}
-              onDuplicate={onFieldDuplicate}
-              isSelected={field.id === selectedFieldId}
-            />
-          ))
+          <SortableContext
+            items={fieldset.fields.map((field) => field.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {fieldset.fields?.map((field) => (
+              <FieldComponent
+                key={field.id}
+                field={field}
+                onSelect={onFieldSelect}
+                onDelete={onFieldDelete}
+                onDuplicate={onFieldDuplicate}
+                isSelected={field.id === selectedFieldId}
+              />
+            ))}
+          </SortableContext>
         )}
       </div>
     </fieldset>

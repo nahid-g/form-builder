@@ -1,6 +1,7 @@
 import { useDroppable } from "@dnd-kit/core";
 import { Field, Fieldset } from "./FormBuilder";
 import FieldsetComponent from "./FieldsetComponent";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 type FormCanvasProps = {
   fieldsets: Fieldset[];
@@ -28,7 +29,7 @@ const FormCanvas = ({
   });
 
   return (
-    <div ref={setNodeRef} className={`col-span-6 p-6`}>
+    <div ref={setNodeRef} className={`col-span-6 p-6 `}>
       <h2 className="text-xl font-semibold text-gray-900 mb-6">Your Module</h2>
 
       {fieldsets.length === 0 ? (
@@ -45,8 +46,9 @@ const FormCanvas = ({
           </div>
         </div>
       ) : (
-        <div
-          className={`space-y-6 bg-white min-h-[calc(100vh-300px)] rounded-lg px-6 py-8 ${
+        <SortableContext items={fieldsets.map((fieldset) => fieldset.id)} strategy={verticalListSortingStrategy}>
+          <div
+            className={`space-y-6 bg-white min-h-[calc(100vh-300px)] rounded-lg px-6 py-8 ${
             isOver ? "border-2 border-red-400 border-dashed bg-red-100 " : ""
           }`}
         >
@@ -62,8 +64,9 @@ const FormCanvas = ({
               isSelected={selectedFieldset?.id === fieldset.id}
               selectedFieldId={selectedField?.id}
             />
-          ))}
-        </div>
+            ))}
+          </div>
+        </SortableContext>
       )}
     </div>
   );
